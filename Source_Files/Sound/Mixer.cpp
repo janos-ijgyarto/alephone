@@ -22,6 +22,7 @@
 #include "Mixer.h"
 #include "interface.h" // for strERRORS
 #include "shell_options.h"
+#include "VoiceOver.h"
 
 void Mixer::Start(uint16 rate, bool sixteen_bit, bool stereo, int num_channels, float db, uint16 samples)
 {
@@ -59,6 +60,7 @@ void Mixer::Start(uint16 rate, bool sixteen_bit, bool stereo, int num_channels, 
 		channels[sound_channel_count + MUSIC_CHANNEL].source = Channel::SOURCE_MUSIC;
 		channels[sound_channel_count + RESOURCE_CHANNEL].source = Channel::SOURCE_RESOURCE;
 		channels[sound_channel_count + NETWORK_AUDIO_CHANNEL].source = Channel::SOURCE_NETWORK_AUDIO;
+		channels[sound_channel_count + VOICEOVER_CHANNEL].source = Channel::SOURCE_VOICEOVER;
 
 		SDL_PauseAudio(false);
 	}
@@ -119,6 +121,28 @@ void Mixer::StartMusicChannel(bool sixteen_bit, bool stereo, bool signed_8bit, i
 void Mixer::UpdateMusicChannel(uint8* data, int len)
 {
 	Channel *c = &channels[sound_channel_count + MUSIC_CHANNEL];
+	c->data = data;
+	c->length = len;
+}
+
+void Mixer::StartVOChannel(bool sixteen_bit, bool stereo, bool signed_8bit, int bytes_per_frame, _fixed rate, bool little_endian)
+{
+	Channel* c = &channels[sound_channel_count + VOICEOVER_CHANNEL];
+	c->info.sixteen_bit = sixteen_bit;
+	c->info.stereo = stereo;
+	c->info.signed_8bit = signed_8bit;
+	c->info.little_endian = little_endian;
+	c->info.bytes_per_frame = bytes_per_frame;
+	c->counter = 0;
+	c->rate = rate;
+	c->left_volume = c->right_volume = 0x100;
+	c->active = true;
+	c->loop_length = 0;
+}
+
+void Mixer::UpdateVOChannel(uint8* data, int len)
+{
+	Channel* c = &channels[sound_channel_count + VOICEOVER_CHANNEL];
 	c->data = data;
 	c->length = len;
 }
@@ -286,6 +310,13 @@ void Mixer::Channel::GetMoreData()
 			active = false;
 		}
 #endif // !defined(DISABLE_NETWORKING)
+	}
+	else if (source == SOURCE_VOICEOVER)
+	{
+		if (!VoiceOver::instance()->FillBuffer())
+		{
+			active = false;
+		}
 	}
 	else
 	{

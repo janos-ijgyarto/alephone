@@ -115,6 +115,7 @@ Jan 25, 2002 (Br'fin (Jeremy Parsons)):
 #include "platforms.h" // for tagged platforms
 #include "lightsource.h" // for tagged lightsources
 #include "screen.h"
+#include "VoiceOver.h"
 
 #include "images.h"
 #include "Packing.h"
@@ -1502,6 +1503,7 @@ static void next_terminal_state(
 	{
 		case _reading_terminal:
 			initialize_player_terminal_info(player_index);
+			VoiceOver::instance()->StopVoiceOver();
 			break;
 			
 		case _no_terminal_state:
@@ -1719,6 +1721,8 @@ static void goto_terminal_group(
 					RECTANGLE_WIDTH(&text_bounds), current_group->start_index, 
 					current_group->start_index+current_group->length);
 			}
+			VoiceOver::instance()->LoadVoiceOver(VoiceOverIndex{ dynamic_world->current_level_number, terminal_data->terminal_id, terminal_data->current_group });
+			VoiceOver::instance()->Play();
 			break;
 			
 		case _information_group:
@@ -1734,6 +1738,8 @@ static void goto_terminal_group(
 					RECTANGLE_WIDTH(&bounds), current_group->start_index,
 					current_group->start_index+current_group->length);
 			}
+			VoiceOver::instance()->LoadVoiceOver(VoiceOverIndex{ dynamic_world->current_level_number, terminal_data->terminal_id, terminal_data->current_group });
+			VoiceOver::instance()->Play();
 			break;
 
 		case _static_group:
@@ -1951,6 +1957,7 @@ static void handle_reading_terminal_keys(
 			{
 				/* Abort! */
 				initialize_player_terminal_info(player_index);
+				VoiceOver::instance()->StopVoiceOver();
 				aborted= true;
 			}
 			break;
@@ -1974,12 +1981,14 @@ static void handle_reading_terminal_keys(
 				teleport_to_level(current_group->permutation, TICKS_PER_SECOND / 2);
 			}
 			initialize_player_terminal_info(player_index);
+			VoiceOver::instance()->StopVoiceOver();
 			aborted= true;
 			break;
 
 		case _intralevel_teleport_group: // permutation is polygon to go to.
 			teleport_to_polygon(player_index, current_group->permutation);
 			initialize_player_terminal_info(player_index);
+			VoiceOver::instance()->StopVoiceOver();
 			aborted= true;
 			break;
 

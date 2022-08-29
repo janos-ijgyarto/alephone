@@ -640,6 +640,7 @@
     <ClCompile Include="..\Source_Files\Sound\SndfileDecoder.cpp" />
     <ClCompile Include="..\Source_Files\Sound\SoundFile.cpp" />
     <ClCompile Include="..\Source_Files\Sound\SoundManager.cpp" />
+    <ClCompile Include="..\Source_Files\Sound\VoiceOver.cpp" />
     <ClCompile Include="..\Source_Files\Sound\VorbisDecoder.cpp" />
     <ClCompile Include="..\Source_Files\TCPMess\CommunicationsChannel.cpp" />
     <ClCompile Include="..\Source_Files\TCPMess\Message.cpp" />
@@ -874,6 +875,7 @@
     <ClInclude Include="..\Source_Files\Sound\SoundManager.h" />
     <ClInclude Include="..\Source_Files\Sound\SoundManagerEnums.h" />
     <ClInclude Include="..\Source_Files\Sound\sound_definitions.h" />
+    <ClInclude Include="..\Source_Files\Sound\VoiceOver.h" />
     <ClInclude Include="..\Source_Files\Sound\VorbisDecoder.h" />
     <ClInclude Include="..\Source_Files\TCPMess\CommunicationsChannel.h" />
     <ClInclude Include="..\Source_Files\TCPMess\Message.h" />

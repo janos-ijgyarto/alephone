@@ -83,6 +83,12 @@ public:
 	void StopMusicChannel() { SDL_LockAudio(); channels[sound_channel_count + MUSIC_CHANNEL].active = false; SDL_UnlockAudio(); }
 	void SetMusicChannelVolume(int16 volume) { channels[sound_channel_count + MUSIC_CHANNEL].left_volume = channels[sound_channel_count + MUSIC_CHANNEL].right_volume = volume; }
 
+	void StartVOChannel(bool sixteen_bit, bool stereo, bool signed_8bit, int bytes_per_frame, _fixed rate, bool little_endian);
+	void UpdateVOChannel(uint8* data, int len);
+	bool VOPlaying() { return channels[sound_channel_count + VOICEOVER_CHANNEL].active; }
+	void StopVOChannel() { SDL_LockAudio(); channels[sound_channel_count + VOICEOVER_CHANNEL].active = false; SDL_UnlockAudio(); }
+	//void SetVOChannelVolume(int16 volume) { channels[sound_channel_count + VOICEOVER_CHANNEL].left_volume = channels[sound_channel_count + VOICEOVER_CHANNEL].right_volume = volume; }
+
 	SDL_AudioSpec desired, obtained;
 
 	void EnsureNetworkAudioPlaying();
@@ -130,6 +136,7 @@ private:
 			SOURCE_MUSIC,
 			SOURCE_RESOURCE,
 			SOURCE_NETWORK_AUDIO,
+			SOURCE_VOICEOVER
 		} source;
 
 		int sound_manager_index;
@@ -146,6 +153,7 @@ private:
 		MUSIC_CHANNEL,
 		RESOURCE_CHANNEL,
 		NETWORK_AUDIO_CHANNEL,
+		VOICEOVER_CHANNEL,
 		EXTRA_CHANNELS
 	};
 

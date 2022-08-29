@@ -56,6 +56,7 @@
 #include "Console.h"
 #include "XML_LevelScript.h"
 #include "InfoTree.h"
+#include "VoiceOver.h"
 
 // This will reset all values changed by MML scripts which implement ResetValues() method
 // and are part of the master MarathonParser tree.
@@ -157,6 +158,8 @@ void _ParseAllMML(const InfoTree& fileroot)
 			parse_mml_console(child);
 		for (const InfoTree &child : root.children_named("default_levels"))
 			parse_mml_default_levels(child);
+		for (const InfoTree& child : root.children_named("voiceover"))
+			VoiceOver::instance()->parse_mml_voiceover(child);
 	}
 }
 
